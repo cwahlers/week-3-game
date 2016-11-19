@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <title>Psychic Game</title>
+  </head>
+  <body>
+    <header>
+      <h2>Psychic Game</h2>
+      <a href="hangman.html">Hangman Game</a>
+    </header>
+    <p id="displayOutput"></p>
+    
+    <script>   
+      var letters = ["a","b","c","d","e","f","g","h","i","j","k"];
+      var computerGuess = letters[Math.floor(Math.random() * letters.length)];
+      var win = 0;
+      var losses =  0;
+      var tries = 9;
+      var guesses = [];
+      var output = "";
+      var display = document.querySelector("#displayOutput");
+
+      function outputScreen(w, l, tr){
+        output = '<p>Guess what letter I am thinking of: </p>';
+        output += '<p>Wins: ' + w; + '</p>';
+        output += '<p>Losses: ' + l; + '</p>';
+        output += '<p>Tries Left: ' + tr; + '</p>';
+        output += '<p>Guesses: ' + guesses; + '</p>';
+        display.innerHTML = output;
+      }
+      // Inital output to the screen
+      outputScreen(win, losses, tries);
+      
+      document.onkeyup = function(event) {
+        //Get the user input
+        var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+        if (guesses.indexOf(userGuess) == -1 ){ //Check if user already entered the guess
+          guesses.push(userGuess);
+          tries--;
+
+          if ( userGuess == computerGuess ) { //check if user guess is in letters
+            win++;
+            tries = 9;
+            guesses = [];
+            computerGuess = letters[Math.floor(Math.random() * letters.length)];
+            outputScreen(win, losses, tries);
+          } else if (tries < 1 ) {
+            losses++;
+            tries = 9;
+            guesses = [];
+            computerGuess = letters[Math.floor(Math.random() * letters.length)];
+            outputScreen(win, losses, tries);
+          } else {
+            outputScreen(win, losses, tries);
+          } 
+        }
+      }
+
+    </script>
+  </body>
+</html>
+

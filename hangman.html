@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <title>Hangman Game</title>
+  </head>
+  <body>
+    <header>
+      <h2>Tom Hanks Movies</h2>
+      <a href="index.html">Psychic Game</a>
+    </header>
+    <p id="displayOutput"></p>
+    
+    <script>   
+      var tomHanks = ["inferno","appollo","philadelphia","toy story"];
+      var word = tomHanks[Math.floor(Math.random() * tomHanks.length)];
+      var wordCnt = 0; 
+      var computerGuess = "";
+      var wins = 0; 
+      var losses =  0;
+      var tries = 9;
+      var userGuess = "_";
+      var guesses = [];
+      var output = "";
+      var display = document.querySelector("#displayOutput");
+
+      function outputScreen(g){
+         var wordCnt = 0;
+         var txtoutput = "";
+         for (var i = 0; i < word.length; i++) {
+          if ( (guesses.indexOf(word[i]) >= 0) || (word[i] == " ")){
+            if (word[i] == " ") { txtoutput += " &nbsp; &nbsp; &nbsp;  " }
+            else { txtoutput += " " + word.substr(i,1) + " ";}
+            wordCnt++;
+          } else {
+            txtoutput += " __ ";
+          }       
+        }
+         if ((tries == 0) || (wordCnt == word.length)) {
+          if (wordCnt == word.length) {
+            wins++;
+          } else {
+            losses++;
+          }
+          tries = 9;
+          word = tomHanks[Math.floor(Math.random() * tomHanks.length)];
+          txtoutput = "";
+          for (var i = 0; i < word.length; i++) {
+            if (word[i] == " ") { txtoutput += "&nbsp; &nbsp; &nbsp;" }
+            else {txtoutput += " __ ";}
+          }
+          guesses = [];
+        }
+        output = '<p>Guess a letter: </p>';
+        output += "<p>" + txtoutput + "</p>"; 
+        output += '<p>Wins: ' + wins + '</p>';
+        output += '<p>Losses: ' + losses + '</p>';
+        output += '<p>Tries Left: ' + tries + '</p>';
+        output += '<p>Guesses: ' + guesses + '</p><br><p>';
+        
+        display.innerHTML = output;
+      }
+      // Inital output to the screen
+      outputScreen(userGuess);
+      //display.innerHTML = output;
+
+      document.onkeyup = function(event) {
+        //Get the user input
+        userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+        if (guesses.indexOf(userGuess) == -1 && (userGuess.match(/[a-z]/)).length == 1){ //Check if user already entered the guess
+          guesses.push(userGuess);
+          if (word.indexOf(userGuess) < 0) {
+            tries--;
+          }
+          outputScreen(userGuess);
+        }
+      }
+    </script>
+  </body>
+</html>
+
